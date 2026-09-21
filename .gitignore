@@ -1,0 +1,5 @@
+.DS_Store
+data/
+docs/
+__pycache__/
+*.png
