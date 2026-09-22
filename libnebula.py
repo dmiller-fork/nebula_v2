@@ -95,6 +95,7 @@ class PartitionedInvertedIndex:
 	def add_wave(self, docs, dataset):
 		for doc, text in docs.items():
 			if doc in self.manifest[dataset]:
+				print(f"doc {doc} already indexed")
 				continue
 			lines = text.splitlines()
 			for line_number, line in enumerate(lines, start=1):
@@ -106,6 +107,30 @@ class PartitionedInvertedIndex:
 					self.partitions[hash_id].index[word][(doc, line_number)] += 1
 			self.manifest[dataset].add(doc)
 		return self.partitions
+
+	# Create Save File
+	def save(self, directory):
+		for i, partition in enumerate(self.partitions):
+			filename = directory / f"{i+1}of{self.num_partitions}.tsv"
+			with open(filename, "a") as f:
+				for word, locations in partition.index.items():
+					for (doc, line_number), count in locations.items():
+						f.write(f"{word}\t{doc}\t{line_number}\t{count}\n")
+		with open(directory / "manifest.tsv", "a") as f:
+			for dataset, docs in self.manifest.items():
+				for doc in docs:
+					f.write(f"{dataset}\t{doc}\n")
+
+	## load manifest before adding waves to ensure same doc is not indexed twice
+	def load_manifest(self, manifest_file):
+		try:
+			with open(manifest_file, "r") as f:
+				for line in f:
+					dataset, doc = line.rstrip("\n").split("\t")
+					self.manifest[dataset].add(doc)
+				print("manifest loaded...")
+		except FileNotFoundError:
+			print("no manifest to load...")
 
 class SearchResults:
 	"""
