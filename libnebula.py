@@ -17,6 +17,9 @@ import functools
 
 # GLOBALS
 PUNCTUATION = string.punctuation + "“”‘’"
+def hash_string(s, modulus):
+	mult = 997
+	return functools.reduce(lambda v, c: (v*mult+ord(c))%modulus, s, 0)
 
 # Alternate Constructor decorators from section 8.16 in Python Cookbook 2013-Beazley
 class InvertedIndex:
@@ -54,7 +57,6 @@ class InvertedIndex:
 			for line in f:
 				doc, dataset = line.rstrip("\n").split("\t")
 				index.indexed[doc] = dataset
-
 		return index
 
 	# Create Save File
@@ -87,10 +89,6 @@ class PartitionedInvertedIndex:
 		self.num_partitions = num_partitions
 		self.manifest = defaultdict(set)
 
-	@staticmethod
-	def hash_string(s, modulus):
-		mult = 997
-		return functools.reduce(lambda v, c: (v*mult+ord(c))%modulus, s, 0)
 	
 	def add_wave(self, docs, dataset):
 		for doc, text in docs.items():
@@ -103,15 +101,17 @@ class PartitionedInvertedIndex:
 
 				for word in words:
 					word = word.strip(PUNCTUATION).lower()
-					hash_id = self.hash_string(word, self.num_partitions)
+					hash_id = hash_string(word, self.num_partitions)
 					self.partitions[hash_id].index[word][(doc, line_number)] += 1
 			self.manifest[dataset].add(doc)
 		return self.partitions
 
 	# Create Save File
 	def save(self, directory):
+		filenames = []
 		for i, partition in enumerate(self.partitions):
 			filename = directory / f"{i+1}of{self.num_partitions}.tsv"
+			filenames.append(filename)
 			with open(filename, "a") as f:
 				for word, locations in partition.index.items():
 					for (doc, line_number), count in locations.items():
@@ -120,6 +120,7 @@ class PartitionedInvertedIndex:
 			for dataset, docs in self.manifest.items():
 				for doc in docs:
 					f.write(f"{dataset}\t{doc}\n")
+		return filenames
 
 	## load manifest before adding waves to ensure same doc is not indexed twice
 	def load_manifest(self, manifest_file):
@@ -162,6 +163,44 @@ class SearchResults:
 				for (bookid, line_number), count in index.index[word].items():
 					results.results[word][bookid][line_number] = count
 		return results
+	
+	# Alternate Constructor/Loader
+	@classmethod
+	def query_partitions(cls, partition_filenames, manifest_filename, query):
+		results = cls()
+		query_words = query.split()
+		partitions = {}
+
+		##assign each word to a partition
+		for word in query_words:
+			word = word.strip(PUNCTUATION).lower()
+			hash_id = hash_string(word, len(partition_filenames))
+			partitions.setdefault(hash_id, []).append(word)
+			
+		## load inverted index from partition and execute all query terms
+		for hash_id, words in partitions.items():
+			index = InvertedIndex.from_save(
+				partition_filenames[hash_id],
+				manifest_filename
+			)
+
+			for word in words:
+				if word in index.index:
+					for (bookid, line_number), count in index.index[word].items():
+						results.results[word][bookid][line_number] = count
+
+		return results
+	def __str__(self):
+		lines = []
+
+		for word, books in self.results.items():
+			lines.append(f"{word}:")
+			for book, locations in books.items():
+				for line_number, count in locations.items():
+					lines.append(f"  [{book}:{line_number}] = ({count})")
+
+		return "\n".join(lines)
+
 
 class TFIDFcalc:
 	""" this class is necessary because

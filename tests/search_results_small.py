@@ -5,28 +5,28 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 from libnebula import InvertedIndex
 from libnebula import PartitionedInvertedIndex
+from libnebula import SearchResults
 
-dataset = "gutenberg"
+dataset = "test_dataset"
+books = {
+    "test": "the the the\nfoo the\nbar"
+}
 
+# books = {}
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = PROJECT_ROOT / "data" / "gutenberg"
 MANIFEST_FILE = PROJECT_ROOT / "data"/ "saves"/ "manifest.tsv"
 SAVE_DIR = PROJECT_ROOT / "data"/ "saves"
+#for file in DATA_DIR.glob("*.txt"):
+	#books[file.stem] = file.read_text()
 
-DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
-
-
-files = list(DATA_DIR.glob("*.txt"))
-
-for start in range(0, len(files), 1000):
-	batch = files[start:start + 1000]
-
-	books = {}
-	for file in batch:
-		books[file.stem] = file.read_text()
-
-	# process books here
+if __name__ == "__main__":
 	num_partitions = 5
 	pindex = PartitionedInvertedIndex(num_partitions)
 	pindex.load_manifest(MANIFEST_FILE)
 	pindex.add_wave(books, dataset)
-	pindex.save(SAVE_DIR)
+	filenames = pindex.save(SAVE_DIR)
+	query = "foo bar"
+	search_results = SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
+	print(search_results)
+	

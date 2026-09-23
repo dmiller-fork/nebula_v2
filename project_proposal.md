@@ -14,7 +14,7 @@ class Trie:
 	- break up the data structures so they can be performed in waves or in parallel
 
 # major tasks
-	- create_inverted_index -> save -> load -> add_wave -> print_size
+	- create_inverted_index -> save -> load -> add_wave -> print_size (DONE)
 	- benchmark searchresults (show overhead of defaultdict)
 	- BM25
 	- toolchain for processing PDFs
