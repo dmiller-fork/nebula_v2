@@ -212,12 +212,10 @@ class TFIDFcalc:
 		n is number of docs in which query term t_k occurs,
 		where k is an iterator for each query term.
 	"""
-	def __init__(self, books):
-		self.book_lengths = {
-			bookid: len(text.split())
-			for bookid, text in books.items()
-		}
-		self.total_number_of_docs = len(books)
+	def __init__(self, book_lengths):
+		self.book_lengths = book_lengths
+		self.total_number_of_docs = len(book_lengths)
+		self.avg_doc_length = sum(book_lengths.values()) / self.total_number_of_docs
 
 	@staticmethod
 	def calc_tf(freq_of_term, doc_length):
@@ -226,6 +224,16 @@ class TFIDFcalc:
 	@staticmethod
 	def calc_idf(number_of_docs_w_term, total_number_of_docs):
 		return math.log(total_number_of_docs / number_of_docs_w_term)
+	
+	@staticmethod
+	def calc_bm25idf(hit_docs, total_docs):
+		return math.log((total_docs - hit_docs + 0.5)/(hit_docs + 0.5) + 1)
+
+	@staticmethod
+	def calc_bm25tf(freq_of_term, doc_length, avg_doc_length):
+		k = 1.2
+		b = .75
+		return ((freq_of_term * (k+1))/(freq_of_term + k*((1-b)+(b*doc_length/avg_doc_length))))
 
 class KRankHeap:
 	def __init__(self, k):
