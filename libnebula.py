@@ -55,7 +55,7 @@ class InvertedIndex:
 
 		with open(manifestfile, "r") as f:
 			for line in f:
-				doc, dataset = line.rstrip("\n").split("\t")
+				doc, dataset, booklength = line.rstrip("\n").split("\t")
 				index.indexed[doc] = dataset
 		return index
 
@@ -81,6 +81,10 @@ class InvertedIndex:
 		return output
 
 class PartitionedInvertedIndex:
+	""" Everything needs to be persisted for large corpus (80k docs)
+	manifest persist dataset, bookid, book_length
+	in memory book_lengths and book_id lookup are kept separate 
+	for O(1) lookup speed """
 	def __init__(self, num_partitions):
 		self.partitions = [
 			InvertedIndex()
@@ -88,6 +92,7 @@ class PartitionedInvertedIndex:
 		]
 		self.num_partitions = num_partitions
 		self.manifest = defaultdict(set)
+		self.book_lengths = defaultdict()
 
 	
 	def add_wave(self, docs, dataset):
@@ -95,15 +100,18 @@ class PartitionedInvertedIndex:
 			if doc in self.manifest[dataset]:
 				print(f"doc {doc} already indexed")
 				continue
+
+			book_length = 0
 			lines = text.splitlines()
 			for line_number, line in enumerate(lines, start=1):
 				words = line.split()
-
+				book_length += len(words)
 				for word in words:
 					word = word.strip(PUNCTUATION).lower()
 					hash_id = hash_string(word, self.num_partitions)
 					self.partitions[hash_id].index[word][(doc, line_number)] += 1
 			self.manifest[dataset].add(doc)
+			self.book_lengths[doc] = book_length
 		return self.partitions
 
 	# Create Save File
@@ -116,10 +124,10 @@ class PartitionedInvertedIndex:
 				for word, locations in partition.index.items():
 					for (doc, line_number), count in locations.items():
 						f.write(f"{word}\t{doc}\t{line_number}\t{count}\n")
-		with open(directory / "manifest.tsv", "a") as f:
+		with open(directory / "manifest.tsv", "w") as f:
 			for dataset, docs in self.manifest.items():
 				for doc in docs:
-					f.write(f"{dataset}\t{doc}\n")
+					f.write(f"{dataset}\t{doc}\t{self.book_lengths[doc]}\n")
 		return filenames
 
 	## load manifest before adding waves to ensure same doc is not indexed twice
@@ -127,8 +135,9 @@ class PartitionedInvertedIndex:
 		try:
 			with open(manifest_file, "r") as f:
 				for line in f:
-					dataset, doc = line.rstrip("\n").split("\t")
+					dataset, doc, book_length = line.rstrip("\n").split("\t")
 					self.manifest[dataset].add(doc)
+					self.book_lengths[doc] = int(book_length)
 				print("manifest loaded...")
 		except FileNotFoundError:
 			print("no manifest to load...")

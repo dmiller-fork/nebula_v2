@@ -15,11 +15,6 @@ books = {
 	"book3": "treasure is here\n treasure"
 }
 
-book_lengths = {
-	bookname: len(booktext) 
-	for bookname, booktext in books.items()
-}
-
 # books = {}
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = PROJECT_ROOT / "data" / "gutenberg"
@@ -37,8 +32,9 @@ if __name__ == "__main__":
 	query = "foo bar"
 	search_results = SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
 	# print(search_results)
+
 	# tfidf object creates doc_lengths and total_number_of_docs
-	tfidf = TFIDFcalc(book_lengths) # this gives setup for doc_word_count
+	tfidf = TFIDFcalc(pindex.book_lengths) # this gives setup for doc_word_count
 
 	# now run triple for loop 
 	book_scores = defaultdict(float)
