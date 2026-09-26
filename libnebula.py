@@ -116,6 +116,16 @@ class PartitionedInvertedIndex:
 
 	# Create Save File
 	def save(self, directory):
+		if not directory.exists():
+			raise FileNotFoundError(
+			f"Storage directory does not exist: {directory}\n"
+			"Check that the Synology volume is mounted."
+		)
+		if not self.book_lengths:
+			raise ValueError(
+				"Refusing to save empty manifest. "
+				"The index contains no document lengths."
+			)
 		filenames = []
 		for i, partition in enumerate(self.partitions):
 			filename = directory / f"{i+1}of{self.num_partitions}.tsv"
@@ -141,6 +151,9 @@ class PartitionedInvertedIndex:
 				print("manifest loaded...")
 		except FileNotFoundError:
 			print("no manifest to load...")
+
+	def __str__(self):
+		return f"book_lengths: {self.book_lengths}"
 
 class SearchResults:
 	"""
@@ -222,6 +235,11 @@ class TFIDFcalc:
 		where k is an iterator for each query term.
 	"""
 	def __init__(self, book_lengths):
+		if not book_lengths:
+			raise ValueError(
+				"book_lengths is empty. "
+				"Load the manifest before creating the index."
+		 )
 		self.book_lengths = book_lengths
 		self.total_number_of_docs = len(book_lengths)
 		self.avg_doc_length = sum(book_lengths.values()) / self.total_number_of_docs
