@@ -17,7 +17,7 @@ MANIFEST_FILE = PROJECT_ROOT / "data"/ "saves"/ "manifest.tsv"
 SAVE_DIR = PROJECT_ROOT / "data"/ "saves"
 
 DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
-
+"""
 files = list(DATA_DIR.glob("*.txt"))
 for start in range(0, len(files), 1000):
 	batch = files[start:start + 1000]
@@ -35,6 +35,12 @@ for start in range(0, len(files), 1000):
 	filenames = pindex.save(SAVE_DIR)
 
 print(filenames)
+"""
+num_partitions = 5
+pindex = PartitionedInvertedIndex(num_partitions)
+pindex.load_manifest(MANIFEST_FILE)
+filenames = pindex.save(SAVE_DIR)
+
 query = "treasure hawkins"
 search_results = SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
 #print(search_results)
