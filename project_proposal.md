@@ -16,10 +16,10 @@ class Trie:
 # major tasks
 	- create_inverted_index -> save -> load -> add_wave -> print_size (DONE)
 	- benchmark searchresults (show overhead of defaultdict)
-	- BM25
+	- BM25 (DONE)
 	- toolchain for processing PDFs
 	- process literature review as a dag and store
-	- create trie -> store idf scores of each word in trie
+	- create trie -> store df scores of each word in trie (DONE)
 	- benchmarks
 
 ## first major benchmark

@@ -3,6 +3,7 @@ from collections import defaultdict
 import heapq
 import math
 import functools
+import pickle
 
 # this file has six classes: 
 
@@ -353,6 +354,7 @@ class TrieNode:
 	def __init__(self):
 		self.children = {}
 		self.is_word = False
+		self.df = 0
 
 
 class Trie:
@@ -375,6 +377,17 @@ class Trie:
 					trie.insert(word)
 		return trie
 
+	@classmethod
+	def from_save(cls, filename):
+		trie = cls()
+		with open(filename, "rb") as f:
+			trie.trie = pickle.load(f)
+		return trie
+
+	def save(self, filename):
+		with open(filename, "wb") as f:
+			pickle.dump(self.trie, f)
+
 	def insert(self, word):
 		node = self.trie
 
@@ -384,6 +397,7 @@ class Trie:
 			node = node.children[char]
 
 		node.is_word = True
+		node.df += 1
 
 	def contains(self, word):
 		node = self.trie
@@ -394,6 +408,18 @@ class Trie:
 			node = node.children[char]
 
 		return node.is_word
+	def get_df(self, word):
+		node = self.trie
+
+		for char in word:
+			if char not in node.children:
+				return False
+			node = node.children[char]
+
+		if node.is_word:
+			return node.df
+		else:
+			return False
 	def words_with_stem(self, stem):
 		node = self.trie
 
