@@ -5,3 +5,4 @@
 	- The scale seems to be linear about 1GB of inverted index per 1000 docs.
 	- I'm scaling up to 10k docs, and then retesting the software.
 	- RAM might be an issue. 
+

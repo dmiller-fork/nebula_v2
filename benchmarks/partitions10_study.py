@@ -1,26 +1,24 @@
 import sys
 from pathlib import Path
-from collections import defaultdict
+import time
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 from libnebula import InvertedIndex
 from libnebula import PartitionedInvertedIndex
 from libnebula import SearchResults
-from libnebula import TFIDFcalc
-from libnebula import KRankHeap
-from libnebula import RankedResults
-from libnebula import Trie
 
 dataset = "gutenberg"
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_FILE = PROJECT_ROOT / "data"/ "saves"/ "manifest.tsv"
-TRIE_FILE = PROJECT_ROOT / "data"/ "saves"/ "trie.bin"
 SAVE_DIR = PROJECT_ROOT / "data"/ "saves"
 
 DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
 
+
 files = list(DATA_DIR.glob("*.txt"))
+book_lengths = {}
 for start in range(0, len(files), 1000):
 	batch = files[start:start + 1000]
 
@@ -29,13 +27,27 @@ for start in range(0, len(files), 1000):
 		text = file.read_text()
 		bookname = file.stem
 		books[bookname] = text
+		book_lengths[bookname] = len(text.split())
 	# process books here
-	trie = Trie.from_docs(books)
+	num_partitions = 10 
+	pindex = PartitionedInvertedIndex(num_partitions)
+	pindex.load_manifest(MANIFEST_FILE)
+	pindex.add_wave(books, dataset)
+	filenames = pindex.save(SAVE_DIR)
 
-trie.save(TRIE_FILE)
 
-if __name__ == "__main__":
-	print("get list for stem: 'trea'")
-	words = trie.words_with_stem("trea")
-	for word in words:
-		print(word, trie.get_df(word))
+query = "treasure hawkins"
+
+times = []
+
+for _ in range(10):
+    start = time.perf_counter()
+    SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
+    times.append(time.perf_counter() - start)
+print(search_results)
+print(times)
+print(f"mean:   {sum(times) / len(times):.6f}s")
+print(f"min:    {min(times):.6f}s")
+elapsed = time.perf_counter() - start
+
+print(f"Query time: {elapsed:.6f} seconds")
