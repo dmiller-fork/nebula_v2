@@ -1,0 +1,34 @@
+# partitining benchmarks
+## setup
+	- I've setup 5 tests to benchmark query time.
+	- The corpus is 10k docs, which is a 10GB inverted index.
+	- The inverted index will be created with 5, 10, 20, 50, and 100 partitions.
+	- The test will use the following code:
+
+```
+
+query = "treasure voyage adventure pirates swords"
+print("query is 5 terms:", query)
+
+times = []
+
+for _ in range(10):
+	start = time.perf_counter()
+	SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
+	times.append(time.perf_counter() - start)
+
+print(f"mean:	{sum(times) / len(times):.6f}s")
+print(f"min:	{min(times):.6f}s")
+
+```
+## procedure
+	- pick a long query (5 words) so file IO has some effect.
+	- in dependent variable is number of partitions
+	- For each run, run the query 10 times, and take the query time.
+	- dependent variable is average query time over ten runs
+
+## Hypothesis
+The goal is to see a curve where number of partitions reduces query time linearly.
+
+Eventually, file I/O will have a greater effect on query time, so the curve should show a negative relationship until a certain point, and then spike up like a "v".
+
