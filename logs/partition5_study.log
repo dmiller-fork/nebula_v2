@@ -1,0 +1,50 @@
+# the first run
+	-the first run was really slow
+```
+$: python3 partitions5_study.py 
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 0: 80.08651037499999s
+create results for hash 1: 111.53630058300007s
+create results for hash 4: 112.011350333s
+create results for hash 3: 194.37266683299993s
+[534.6827960410001]
+mean:   534.682796s
+min:    534.682796s
+```
+	- I looked at the code and manifest was loading each time because reusing the constructor to create a mini inverted index from the search results
+	- created a separate route within the constructor to not load manifest
+	- no appreciable change
+```
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 0: 77.27680695900017s
+create results for hash 1: 108.89204933400015s
+create results for hash 4: 111.77117929199994s
+create results for hash 3: 199.05184875000032s
+[536.429479333]
+mean:   536.429479s
+min:    536.429479s
+```
+
+	- I then looked at the from_save function and realized I was recreating the entire inverted index for the partition rather than just the words that I needed. So I added a simple fix:
+```
+	if word is not in query_words:
+		continue
+```
+	- here are the resutls
+
+```
+$: python3 partitions5_study.py 
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 0: 35.05510716699973s
+create results for hash 1: 27.424514250000357s
+create results for hash 4: 35.84316395899987s
+ create results for hash 3: 43.73660562499981s
+[142.07540604099995]
+mean:   142.075406s
+min:    142.075406s
+```
+	- from about eight and half minutes to about two and half minutes. Much better.
+

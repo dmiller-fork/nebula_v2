@@ -4,6 +4,7 @@ import heapq
 import math
 import functools
 import pickle
+import time
 
 # this file has six classes: 
 
@@ -46,20 +47,32 @@ class InvertedIndex:
 		return index
 	# Alternate Constructor/Loader
 	@classmethod
-	def from_save(cls, savefile, manifestfile):
+	def from_save(cls, savefile, manifestfile=None):
 		index = cls()
 
 		with open(savefile, "r") as f:
 			for line in f:
 				word, doc, line_number, count = line.rstrip("\n").split("\t")
 				index.index[word][(doc, int(line_number))] = int(count)
-
-		with open(manifestfile, "r") as f:
-			for line in f:
-				doc, dataset, booklength = line.rstrip("\n").split("\t")
-				index.indexed[doc] = dataset
+		if manifestfile is not None:
+			with open(manifestfile, "r") as f:
+				for line in f:
+					doc, dataset, booklength = line.rstrip("\n").split("\t")
+					index.indexed[doc] = dataset
 		return index
 
+	# Alternate Constructor/Loader
+	@classmethod
+	def from_save_for_query(cls, savefile, query_words):
+		index = cls()
+
+		with open(savefile, "r") as f:
+			for line in f:
+				word, doc, line_number, count = line.rstrip("\n").split("\t")
+				if word not in query_words:
+					continue
+				index.index[word][(doc, int(line_number))] = int(count)
+		return index
 	# Create Save File
 	def save(self, savefile, manifestfile):
 		with open(savefile, "w") as f:
@@ -189,11 +202,10 @@ class SearchResults:
 	
 	# Alternate Constructor/Loader
 	@classmethod
-	def query_partitions(cls, partition_filenames, manifest_filename, query):
+	def query_partitions(cls, partition_filenames, query):
 		results = cls()
 		query_words = query.split()
 		partitions = {}
-
 		##assign each word to a partition
 		for word in query_words:
 			word = word.strip(PUNCTUATION).lower()
@@ -202,11 +214,13 @@ class SearchResults:
 			
 		## load inverted index from partition and execute all query terms
 		for hash_id, words in partitions.items():
-			index = InvertedIndex.from_save(
+			start = time.perf_counter()
+			index = InvertedIndex.from_save_for_query(
 				partition_filenames[hash_id],
-				manifest_filename
+				query_words
 			)
-
+			elapse = time.perf_counter() - start
+			print(f"create results for hash {hash_id}: {elapse}s")
 			for word in words:
 				if word in index.index:
 					for (bookid, line_number), count in index.index[word].items():
