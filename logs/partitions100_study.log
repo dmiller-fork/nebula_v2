@@ -1,0 +1,65 @@
+$: python3 partitions100_study.py 
+no manifest to load...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 35: 0.7925585000002684s
+create results for hash 15: 1.1534558749999633s
+create results for hash 86: 0.8762228339996909s
+create results for hash 4: 1.5531507499999861s
+create results for hash 38: 0.8829004170002008s
+create results for hash 35: 0.7844407499997033s
+create results for hash 15: 1.1282209999999395s
+create results for hash 86: 0.8784337500001129s
+create results for hash 4: 1.5817574169996078s
+create results for hash 38: 0.8799599169997236s
+create results for hash 35: 0.7963103330002923s
+create results for hash 15: 1.1548951250001664s
+create results for hash 86: 0.8724843329996474s
+create results for hash 4: 1.5608613750000586s
+create results for hash 38: 0.8898972919996595s
+create results for hash 35: 0.7925881670003037s
+create results for hash 15: 1.1373954169998797s
+create results for hash 86: 0.8625572920000195s
+create results for hash 4: 1.5608274579999488s
+create results for hash 38: 0.8830932089999806s
+create results for hash 35: 0.7869621659997392s
+create results for hash 15: 1.131875499999751s
+create results for hash 86: 0.8630705000000489s
+create results for hash 4: 1.561501374999807s
+create results for hash 38: 0.8764596249998249s
+create results for hash 35: 0.7881130000000667s
+create results for hash 15: 1.1352406660002998s
+create results for hash 86: 0.862560833000316s
+create results for hash 4: 1.5467171669997697s
+create results for hash 38: 0.8751268330001949s
+create results for hash 35: 0.7883587919995989s
+create results for hash 15: 1.140699417000178s
+create results for hash 86: 0.8705217500000799s
+create results for hash 4: 1.5565995000001749s
+create results for hash 38: 0.8761278749998382s
+create results for hash 35: 0.7806058750002194s
+create results for hash 15: 1.1378620420000516s
+create results for hash 86: 0.8637420830000337s
+create results for hash 4: 1.5515265839999302s
+create results for hash 38: 0.8828725409998697s
+create results for hash 35: 0.7844064999999318s
+create results for hash 15: 1.132412958000259s
+create results for hash 86: 0.8608193329996539s
+create results for hash 4: 1.549386166000204s
+create results for hash 38: 0.8760464590000083s
+create results for hash 35: 0.7908411250000427s
+create results for hash 15: 1.1319970829999875s
+create results for hash 86: 0.8650813340000241s
+create results for hash 4: 1.5671623749999526s
+create results for hash 38: 0.8768102919998455s
+[5.272922250000192, 5.271704457999931, 5.289598165999905, 5.251257500000065, 5.234644916999969, 5.2227780829998665, 5.247026166000069, 5.252025291999871, 5.217659084000388, 5.246781000000283]
+mean:   5.250640s
+min:    5.217659s

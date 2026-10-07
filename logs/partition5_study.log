@@ -47,4 +47,52 @@ mean:   142.075406s
 min:    142.075406s
 ```
 	- from about eight and half minutes to about two and half minutes. Much better.
-
+	- then extended study to 10 runs, to find mean run time:
+```
+$: python3 partitions5_study.py 
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 0: 35.12594737500331s
+create results for hash 1: 27.55038324999623s
+create results for hash 4: 35.80017070800386s
+create results for hash 3: 44.15969045899692s
+create results for hash 0: 35.74193687499792s
+create results for hash 1: 27.916168875002768s
+create results for hash 4: 36.23985874999926s
+create results for hash 3: 43.82226400000218s
+create results for hash 0: 33.90481791699858s
+create results for hash 1: 26.718876541999634s
+create results for hash 4: 35.6124808329987s
+create results for hash 3: 44.64791154200066s
+create results for hash 0: 35.056751167001494s
+create results for hash 1: 27.373033542004123s
+create results for hash 4: 35.84075908399973s
+create results for hash 3: 44.13479433400062s
+create results for hash 0: 34.42912104199786s
+create results for hash 1: 26.379573584003083s
+create results for hash 4: 34.31340383300267s
+create results for hash 3: 42.363978084002156s
+create results for hash 0: 33.80976974999794s
+create results for hash 1: 26.53690654199454s
+create results for hash 4: 34.35285616699548s
+create results for hash 3: 42.272230124995986s
+create results for hash 0: 35.05277991700132s
+create results for hash 1: 27.440106000001833s
+create results for hash 4: 35.80136220800341s
+create results for hash 3: 43.967103291994135s
+create results for hash 0: 35.12460241700319s
+create results for hash 1: 27.52345687500201s
+create results for hash 4: 35.858839084001374s
+create results for hash 3: 43.957187708001584s
+create results for hash 0: 35.049607125001785s
+create results for hash 1: 27.529733499999566s
+create results for hash 4: 35.91499854200083s
+create results for hash 3: 44.37609054200584s
+create results for hash 0: 35.43485783300275s
+create results for hash 1: 27.40160583400575s
+create results for hash 4: 35.311169375003374s
+create results for hash 3: 43.36272262499551s
+[142.65345908299787, 143.73644724999758, 140.90110833299696, 142.42145249999885, 137.5018644590018, 136.98741858299763, 142.27772370899766, 142.48133745799714, 142.8853985829992, 141.52585879099934]
+mean:   141.337207s
+min:    136.987419sa
+```

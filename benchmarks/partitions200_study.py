@@ -30,7 +30,7 @@ for start in range(0, len(files), 1000):
 		books[bookname] = text
 		book_lengths[bookname] = len(text.split())
 	# process books here
-	num_partitions = 10
+	num_partitions = 200
 	pindex = PartitionedInvertedIndex(num_partitions)
 	pindex.load_manifest(MANIFEST_FILE)
 	pindex.add_wave(books, dataset)

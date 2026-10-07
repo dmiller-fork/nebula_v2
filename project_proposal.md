@@ -15,12 +15,13 @@ class Trie:
 
 # major tasks
 	- create_inverted_index -> save -> load -> add_wave -> print_size (DONE)
-	- benchmark searchresults (show overhead of defaultdict)
+	- benchmark searchresults (query run time testing) (DONE)
 	- BM25 (DONE)
-	- toolchain for processing PDFs
-	- process literature review as a dag and store
+	- toolchain for processing PDFs (CANCEL - part of v3)
+	- process literature review as a dag and store (CANCEL - part of v3)
 	- create trie -> store df scores of each word in trie (DONE)
-	- benchmarks
+	- benchmark search results (precision and recall testing)
+	- UI needs to implement (/search and /trie) as commands
 
 ## first major benchmark
 	- I tried scaling to 10k docs, and had to scale up hardware and change the infra

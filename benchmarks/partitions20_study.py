@@ -18,6 +18,7 @@ DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
 
 
 files = list(DATA_DIR.glob("*.txt"))
+if not files: raise FileNotFoundError(f"Could not load files; is drive mounted?")
 book_lengths = {}
 for start in range(0, len(files), 1000):
 	batch = files[start:start + 1000]
@@ -29,25 +30,26 @@ for start in range(0, len(files), 1000):
 		books[bookname] = text
 		book_lengths[bookname] = len(text.split())
 	# process books here
-	num_partitions = 20 
+	num_partitions = 20
 	pindex = PartitionedInvertedIndex(num_partitions)
 	pindex.load_manifest(MANIFEST_FILE)
 	pindex.add_wave(books, dataset)
 	filenames = pindex.save(SAVE_DIR)
 
-
-query = "treasure hawkins"
-
+"""
+num_partitions = 5
+pindex = PartitionedInvertedIndex(num_partitions)
+pindex.load_manifest(MANIFEST_FILE)
+filenames = pindex.save(SAVE_DIR)
+"""
+query = "treasure voyage adventure pirates swords"
+print("query is 5 terms:", query)
 times = []
 
 for _ in range(10):
     start = time.perf_counter()
-    SearchResults.query_partitions(filenames, MANIFEST_FILE, query)
+    SearchResults.query_partitions(filenames, query)
     times.append(time.perf_counter() - start)
-print(search_results)
 print(times)
 print(f"mean:   {sum(times) / len(times):.6f}s")
 print(f"min:    {min(times):.6f}s")
-elapsed = time.perf_counter() - start
-
-print(f"Query time: {elapsed:.6f} seconds")

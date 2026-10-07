@@ -46,7 +46,7 @@ query = "treasure voyage adventure pirates swords"
 print("query is 5 terms:", query)
 times = []
 
-for _ in range(1):
+for _ in range(10):
     start = time.perf_counter()
     SearchResults.query_partitions(filenames, query)
     times.append(time.perf_counter() - start)

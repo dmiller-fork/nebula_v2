@@ -1,0 +1,55 @@
+$: python3 partitions20_study.py 
+no manifest to load...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 15: 10.112343417000375s
+create results for hash 6: 4.948359666996112s
+create results for hash 4: 8.63331137500063s
+create results for hash 18: 5.384161750000203s
+create results for hash 15: 10.126838374999352s
+create results for hash 6: 5.068485542004055s
+create results for hash 4: 8.993746332998853s
+create results for hash 18: 5.6581862919993s
+create results for hash 15: 10.554640792004648s
+create results for hash 6: 5.176903250001487s
+create results for hash 4: 9.035494499999913s
+create results for hash 18: 5.617463167000096s
+create results for hash 15: 10.562058625000645s
+create results for hash 6: 5.094664791999094s
+create results for hash 4: 8.980586500001664s
+create results for hash 18: 5.638533624995034s
+create results for hash 15: 10.549754375002522s
+create results for hash 6: 5.177817707997747s
+create results for hash 4: 9.080662000000302s
+create results for hash 18: 5.6050695840021945s
+create results for hash 15: 10.594726625000476s
+create results for hash 6: 5.155113209002593s
+create results for hash 4: 9.068468790996121s
+create results for hash 18: 5.654842290998204s
+create results for hash 15: 10.625956124997174s
+create results for hash 6: 5.149386416997004s
+create results for hash 4: 9.017562790999364s
+create results for hash 18: 5.675991167001484s
+create results for hash 15: 10.594968375000462s
+create results for hash 6: 5.208312209004362s
+create results for hash 4: 8.721804458000406s
+create results for hash 18: 5.625508875004016s
+create results for hash 15: 10.61189504199865s
+create results for hash 6: 5.141572375003307s
+create results for hash 4: 9.054209750000155s
+create results for hash 18: 5.61479333400348s
+create results for hash 15: 10.615528750000522s
+create results for hash 6: 5.177141249994747s
+create results for hash 4: 9.078862124995794s
+create results for hash 18: 5.6909905829961644s
+[29.092984583003272, 29.862467040999036, 30.400068957998883, 30.291315333997773, 30.428463791999093, 30.48797641699639, 30.48392958399927, 30.174366040999303, 30.437695041997358, 31.326234416999796]
+mean:   30.298550s
+min:    29.092985s
