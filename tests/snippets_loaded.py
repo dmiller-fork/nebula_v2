@@ -15,27 +15,8 @@ dataset = "gutenberg"
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MANIFEST_FILE = PROJECT_ROOT / "data"/ "saves"/ "manifest.tsv"
 SAVE_DIR = PROJECT_ROOT / "data"/ "saves"
-
 DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
-"""
-files = list(DATA_DIR.glob("*.txt"))
-for start in range(0, len(files), 1000):
-	batch = files[start:start + 1000]
 
-	books = {}
-	for file in batch:
-		text = file.read_text()
-		bookname = file.stem
-		books[bookname] = text
-	# process books here
-	num_partitions = 5
-	pindex = PartitionedInvertedIndex(num_partitions)
-	pindex.load_manifest(MANIFEST_FILE)
-	pindex.add_wave(books, dataset)
-	filenames = pindex.save(SAVE_DIR)
-
-print(filenames)
-"""
 num_partitions = 5
 pindex = PartitionedInvertedIndex(num_partitions)
 pindex.load_manifest(MANIFEST_FILE)
