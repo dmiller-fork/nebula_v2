@@ -1,0 +1,18 @@
+$: python3 recall_and_precision_adventure_bm25.py 
+starting test...
+957
+114
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 435: 0.12700691700001698s
+create results for hash 215: 0.17006220799999028s
+create results for hash 286: 0.1410544170000776s
+create results for hash 104: 0.9138456660000429s
+create results for hash 38: 0.1711926670000139s
+number of docs in dataset: 9456
+number of relevant docs in dataset: 957
+number of docs returned: 20
+number of relevant docs in results: 11
+Precision@20: 55.00%
+Recall@20:    1.15%
+Max possible recall given docs returned: 2.09%

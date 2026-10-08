@@ -1,0 +1,18 @@
+$: python3 recall_and_precision_scifi_idf.py
+starting test...
+957
+114
+manifest loaded...
+query is 5 terms: spaceship future technology alien planet
+create results for hash 36: 0.1241254590004246s
+create results for hash 371: 0.4378374170000825s
+create results for hash 392: 0.13098799999988842s
+create results for hash 193: 0.16555937500015716s
+create results for hash 216: 0.1732715409998491s
+number of docs in dataset: 9456
+number of relevant docs in dataset: 114
+number of docs returned: 20
+number of relevant docs in results: 3
+Precision@20: 15.00%
+Recall@20:    2.63%
+Max possible recall given docs returned: 17.54%

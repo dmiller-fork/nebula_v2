@@ -1,0 +1,18 @@
+$: python3 recall_and_precision_treasureisland_bm25.py 
+starting test...
+957
+114
+1
+manifest loaded...
+query is 5 terms: voyage yo-ho-ho travel weapons
+create results for hash 215: 0.16725495799983037s
+create results for hash 488: 1.4831693330002054s
+create results for hash 294: 0.8019526250000126s
+create results for hash 325: 1.0231700829999681s
+number of docs in dataset: 9456
+number of relevant docs in dataset: 1
+number of docs returned: 20
+number of relevant docs in results: 1
+Precision@20: 5.00%
+Recall@20:    100.00%
+Max possible recall given docs returned: 2000.00%

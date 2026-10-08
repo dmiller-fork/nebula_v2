@@ -1,0 +1,18 @@
+$: python3 recall_and_precision_adventure_tfidf.py 
+starting test...
+957
+114
+manifest loaded...
+query is 5 terms: treasure voyage adventure pirates swords
+create results for hash 435: 0.12792287499996746s
+create results for hash 215: 0.17068529200014382s
+create results for hash 286: 0.14072029199996905s
+create results for hash 104: 0.9162461659998371s
+create results for hash 38: 0.17192674999978408s
+number of docs in dataset: 9456
+number of relevant docs in dataset: 957
+number of docs returned: 20
+number of relevant docs in results: 12
+Precision@20: 60.00%
+Recall@20:    1.25%
+Max possible recall given docs returned: 2.09%
