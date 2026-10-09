@@ -32,3 +32,7 @@ The goal is to see a curve where number of partitions reduces query time linearl
 
 Eventually, file I/O will have a greater effect on query time, so the curve should show a negative relationship until a certain point, and then spike up like a "v".
 
+## Results
+I did the partitioning, and the query time only went down for standard 5 term queries. I started the study at 5 partitions, and the query time was a little over 8 minutes. I optimized the code a little, and got the query time down to about 2 min 20 seconds. Then I started the study in earnest, doing 5, 10, 20, 50, 100, and 500 partitions. An increase in number of partitions linearly decreased the query time, even all the way to 500 partitions. The final query time for a 5 term query with 500 partitions was about 1 second, and I stopped there.
+
+One interesting note however, is that I have the ability to create very long queries by adding the $ sign at the end of a stem. With a long query like this, it could take a very long time because each partition needs to be opened and closed. We are talking more than 30 minutes, so it might be worth it, to limit the number of query terms allowed at the user interface level, just to prevent extremely long queries.

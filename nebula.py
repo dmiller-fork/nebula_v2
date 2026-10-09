@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 from collections import defaultdict
 sys.path.append(str(Path(__file__).parent.parent))
+import time
 
 from libnebula import InvertedIndex
 from libnebula import PartitionedInvertedIndex
@@ -9,6 +10,7 @@ from libnebula import SearchResults
 from libnebula import TFIDFcalc
 from libnebula import KRankHeap
 from libnebula import RankedResults
+from libnebula import Trie
 
 dataset = "gutenberg"
 
@@ -19,17 +21,48 @@ DATA_DIR = Path("/Volumes/home/repos/nebula/data/gutenberg")
 TRIE_FILE = PROJECT_ROOT / "data"/ "saves"/ "trie.bin"
 
 def main():
+	flag = True
+	if Path(MANIFEST_FILE).exists():
+		print("index already exists, loading index and trie, takes a 2 min")
+		start = time.perf_counter()
+		num_partitions = 500
+		pindex = PartitionedInvertedIndex(num_partitions)
+		pindex.load_manifest(MANIFEST_FILE)
+		filenames = pindex.save(SAVE_DIR)
+		trie = Trie.from_save(TRIE_FILE)
+		print(f"Load time: {time.perf_counter() - start:.2f}s")
+	else:
+		req = input("no index loaded. Type '/build' to build index or /quit to quit\n")
+		if req == "/build":
+			trie = Trie()
+			files = list(DATA_DIR.glob("*.txt"))
+			if not files: raise FileNotFoundError(f"Could not load files; is drive mounted? ")
+			book_lengths = {}
+			for start in range(0, len(files), 1000):
+				batch = files[start:start + 1000]
 
-	num_partitions = 500
-	pindex = PartitionedInvertedIndex(num_partitions)
-	pindex.load_manifest(MANIFEST_FILE)
-	filenames = pindex.save(SAVE_DIR)
-
-	print("search with wildcard character '$' or filter character '!' at end of terms")
-	print()
-
-	while True:
+				books = {}
+				for file in batch:
+					text = file.read_text()
+					bookname = file.stem
+					books[bookname] = text
+					book_lengths[bookname] = len(text.split())
+				trie.add_docs(books)
+				# process books here
+				num_partitions = 500
+				pindex = PartitionedInvertedIndex(num_partitions)
+				pindex.load_manifest(MANIFEST_FILE)
+				pindex.add_wave(books, dataset)
+				filenames = pindex.save(SAVE_DIR)
+			trie.save(TRIE_FILE)		
+		else:
+			flag = False	
+		
+	while flag:
 		try:
+	
+			print("search with wildcard character '$' or filter character '!' at end of terms")
+			print()
 			query = input("nebula> ").strip()
 		except EOFError:
 			print()
@@ -48,9 +81,14 @@ def main():
 		if query == "/build":
 			break
 	
-		if query == "/trie":
-			break
-
+		if query.startswith("/trie "):
+			terms = query.removeprefix("/trie ").strip()
+			print("get list for stem: 'trea'")
+			for term in terms.split():
+				words = trie.words_with_stem(term)
+				for word in words:
+					print(word, trie.get_df(word))		
+			continue
 		if not query: #check for empty input 
 			continue
 
@@ -61,6 +99,11 @@ def main():
 		for word in query_words:
 			if word[-1] == '$':
 				terms = trie.words_with_stem(word[0:-1])
+				if len(terms) > 20:
+					print(f"Expands to {len(terms)} terms.")
+					confirm = input("Continue? (y/n): ").lower()
+					if confirm != "y":
+						continue
 				snippet_terms.extend(terms)
 				expand_terms = " ".join(terms)
 				full_query += " " + expand_terms

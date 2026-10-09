@@ -365,6 +365,7 @@ class RankedResults:
 				return line.removeprefix("Title:").strip()
 
 class TrieNode:
+	__slots__ = ("children", "is_word", "df")
 	def __init__(self):
 		self.children = {}
 		self.is_word = False
@@ -379,7 +380,10 @@ class Trie:
 	@classmethod
 	def from_docs(cls, docs):
 		trie = cls()
+		trie.add_docs(docs)
+		return trie
 
+	def add_docs(self, docs):
 		for doc, text in docs.items():
 			lines = text.splitlines()
 
@@ -388,8 +392,8 @@ class Trie:
 
 				for word in words:
 					word = word.strip(PUNCTUATION).lower()
-					trie.insert(word)
-		return trie
+					if word:
+						self.insert(word)	
 
 	@classmethod
 	def from_save(cls, filename):
