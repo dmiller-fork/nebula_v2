@@ -91,7 +91,10 @@ def main():
 			continue
 		if not query: #check for empty input 
 			continue
+		
+		print("parsing query here")
 
+		start0 = time.perf_counter()
 		# Parse Query looking for special terms "!" and "$" at the end of words
 		full_query = ""
 		snippet_terms = []
@@ -112,6 +115,8 @@ def main():
 			else:
 				full_query += " " + word
 				snippet_terms.append(word)
+		
+		print(f"parse query time: {time.perf_counter() - start0:.4f}s")
 		print("full query: ", full_query)
 		print("snippet_terms: ", snippet_terms)
 			
@@ -119,7 +124,10 @@ def main():
 		search_results = SearchResults.query_partitions(filenames, full_query)
 		
 		## Generate Scores for each book
+		print("start time BM25")
+		start1 = time.perf_counter()
 		tfidf = TFIDFcalc(pindex.book_lengths)
+
 		book_scores = defaultdict(float)
 		for term, book_postings in search_results.results.items():
 			df = len(book_postings)
@@ -136,6 +144,9 @@ def main():
 				)
 				book_scores[bookid] += tf * idf
 		
+		print(f"BM25 calc time: {time.perf_counter() - start1:.4f}s")
+		print("end time BM25")
+		start2 = time.perf_counter()
 		## Push the top scores onto the Heap
 		k = 5 
 		rank_heap = KRankHeap(k)
@@ -143,6 +154,9 @@ def main():
 		for bookid, score in book_scores.items():
 			rank_heap.add_result(bookid, score)
 
+		print(f"KRank generation time: {time.perf_counter() - start2:.4f}s")
+
+		start3 = time.perf_counter()
 		## Generate Snippets
 		ranked_results = RankedResults(search_results.results, rank_heap.heap)
 		window_size = 5
@@ -169,5 +183,7 @@ def main():
 		else:
 			for book_dict in ranked_results.ranked_results:
 				print(book_dict)		
+
+		print(f"Snippet generation time: {time.perf_counter() - start3:.4f}s")
 if __name__ == "__main__":
 	main()

@@ -21,7 +21,8 @@ class Trie:
 	- process literature review as a dag and store (CANCEL - part of v3)
 	- create trie -> store df scores of each word in trie (DONE)
 	- benchmark search results (precision and recall testing) (DONE)
-	- UI needs to implement (/build and /trie) as commands
+	- UI needs to implement (/build and /trie) as commands (DONE)
+	- README.md
 
 ## first major benchmark
 	- I tried scaling to 10k docs, and had to scale up hardware and change the infra
