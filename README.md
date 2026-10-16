@@ -1,3 +1,12 @@
+# Getting started
+    - clone the repo
+    - download the first 10k docs of the gutenberg dataset (using script in scripts folder). Should be about 10GB.
+    - update the path variable DATA_DIR in nebula.py to point to the dataset
+    - then run the program: `python3 nebula.py`.
+	- the first command should be `/build` to build the inverted index. Should be about 10GB.
+	- after that search using the '$' query expander at the end of terms or the '!' filter remove search terms from snippets.
+	- one last feature is the /trie command which lets you explore document frequency of stems
+
 ### Environment Setup
 
 Nebula uses two environments:
